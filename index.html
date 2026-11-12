@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>River Remedy Tap Board</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Fira+Sans+Condensed:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0c2b47; --navy2:#123a5e; --deep:#071d31;
+    --yellow:#f3d43b; --lime:#e3e83a; --green:#1f7a3d; --sky:#8fcdea; --cream:#f3eee2;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;background:#000;overflow:hidden}
+  #fit{position:fixed;inset:0;overflow:hidden}
+  #stage{width:1920px;height:1080px;position:absolute;left:50%;top:50%;overflow:hidden;transform-origin:center center;
+    font-family:"Fira Sans Condensed",Arial Narrow,Arial,sans-serif;color:#fff;background:var(--navy)}
+  .screen{position:absolute;inset:0;opacity:0;transition:opacity .8s ease}
+  .screen.on{opacity:1}
+
+  /* ---------- tap list ---------- */
+  .tap{background:
+      radial-gradient(1200px 600px at 50% -10%, rgba(143,205,234,.18), transparent 60%),
+      linear-gradient(180deg,var(--navy2),var(--navy) 55%,var(--deep));}
+  .head{position:absolute;top:34px;left:0;right:0;text-align:center}
+  .head h1{font-family:"Luckiest Guy",Impact,sans-serif;font-weight:400;font-size:92px;letter-spacing:2px;
+    color:#fff;text-shadow:0 5px 0 rgba(0,0,0,.35)}
+  .head .sub{margin-top:-4px;font-size:30px;font-weight:600;color:var(--sky);letter-spacing:3px;text-transform:uppercase}
+  .badge{position:absolute;top:34px;width:130px;height:130px;border-radius:50%;background:var(--green);
+    border:8px solid var(--lime);display:flex;align-items:center;justify-content:center;text-align:center;
+    font-family:"Luckiest Guy",Impact,sans-serif;color:var(--lime);font-size:25px;line-height:.95;box-shadow:0 6px 0 rgba(0,0,0,.3)}
+  .badge.l{left:70px}.badge.r{right:70px}
+  .cols{position:absolute;top:220px;left:70px;right:70px;bottom:120px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:70px}
+  .col{display:flex;flex-direction:column;min-width:0}
+  .ph{display:grid;grid-template-columns:minmax(0,1fr) repeat(4,100px);align-items:end;padding:0 0 10px;
+    border-bottom:3px solid rgba(143,205,234,.45);font-size:20px;font-weight:700;color:var(--sky);text-transform:uppercase;letter-spacing:.5px}
+  .ph span{text-align:right;line-height:1.05}
+  .row{display:grid;grid-template-columns:minmax(0,1fr) repeat(4,100px);align-items:center;flex:1;
+    border-bottom:2px solid rgba(255,255,255,.08)}
+  .row:last-child{border-bottom:none}
+  .nm{font-size:42px;font-weight:700;line-height:1.02;overflow:hidden;padding-right:14px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+  .nm .n{color:var(--yellow);margin-right:10px}
+  .nm .new{display:inline-block;vertical-align:middle;margin-left:12px;font-size:20px;font-weight:800;background:var(--lime);
+    color:var(--navy);padding:3px 10px 1px;border-radius:6px;letter-spacing:1px}
+  .st{font-size:27px;font-weight:600;color:var(--yellow);margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:14px}
+  .pr{text-align:right;font-size:34px;font-weight:800}
+  .pr .d{font-size:22px;vertical-align:top;margin-right:1px;color:var(--sky)}
+  .span4{grid-column:2 / span 4;text-align:right;font-size:30px;font-weight:700}
+  .span4 b{font-weight:800;font-size:34px}
+  .foot{position:absolute;left:0;right:0;bottom:0;height:120px}
+  .waves{position:absolute;left:0;right:0;bottom:44px;height:60px}
+  .fbar{position:absolute;left:70px;right:70px;bottom:10px;display:flex;justify-content:space-between;align-items:center;
+    font-size:26px;font-weight:700;color:var(--sky)}
+  .dots{display:flex;gap:12px}.dots i{width:16px;height:16px;border-radius:50%;background:rgba(255,255,255,.25)}
+  .dots i.on{background:var(--yellow)}
+
+  /* ---------- ad slides ---------- */
+  .ad{background:var(--cream);color:var(--navy)}
+  .ad h2{font-family:"Luckiest Guy",Impact,sans-serif;font-weight:400;font-size:120px;text-align:center;margin-top:60px;letter-spacing:2px}
+  .merch{display:grid;grid-template-columns:1fr 1fr;padding:30px 220px 0;gap:30px 120px;font-family:"Luckiest Guy",Impact,sans-serif}
+  .merch h3{color:var(--green);font-size:52px;font-weight:400;text-align:center}
+  .merch p{font-size:44px;text-align:center;line-height:1.18}
+  .ad.dark{background:linear-gradient(180deg,var(--navy2),var(--deep));color:#fff}
+  .ad.dark h2{color:var(--lime)}
+  .week{display:grid;grid-template-columns:1fr 1fr;gap:22px 40px;padding:20px 160px 0}
+  .day{background:rgba(255,255,255,.06);border:3px solid rgba(143,205,234,.5);border-radius:18px;padding:18px 28px;display:flex;
+    justify-content:space-between;align-items:center}
+  .day .dn{font-family:"Luckiest Guy",Impact,sans-serif;font-size:48px;color:var(--yellow)}
+  .day .ev{text-align:right;font-size:36px;font-weight:700;line-height:1.1}
+  .day .ev small{display:block;font-size:30px;color:var(--sky)}
+  .mug{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;text-align:center;padding:0 200px}
+  .mug h2{margin:0;font-size:150px;color:var(--lime)}
+  .mug p{font-size:50px;font-weight:700;margin-top:24px;line-height:1.25}
+  .mug .price{margin-top:36px;font-family:"Luckiest Guy",Impact,sans-serif;font-size:90px;color:var(--yellow)}
+  .adfoot{position:absolute;left:0;right:0;bottom:30px}
+
+  /* preview-only controls */
+  #ctl{position:fixed;left:12px;bottom:12px;z-index:9;display:flex;gap:8px;font:600 13px system-ui,sans-serif;opacity:.25;transition:opacity .2s}
+  #ctl:hover{opacity:1}
+  #ctl button{background:#fff;border:0;border-radius:6px;padding:6px 10px;cursor:pointer}
+</style>
+</head>
+<body>
+<div id="fit"><div id="stage"></div></div>
+
+  <style>.ad.img{background:#000}.ad.img img{width:100%;height:100%;object-fit:contain;display:block}
+  #msg{position:absolute;left:0;right:0;top:45%;text-align:center;font-size:48px;color:#8fcdea}</style>
+<script src="config.js"></script>
+<script>
+/* River Remedy Tap Board – live client.
+   Works two ways:
+   1) served by Apps Script (uses google.script.run), or
+   2) hosted elsewhere (GitHub Pages) with API set to the Apps Script /exec URL. */
+const API = window.TAPBOARD_API || "";   // set in config.js
+const GAS = (typeof google !== "undefined" && google.script && google.script.run);
+const STD_COLS = [["16oz Draft","16oz"],["10oz Draft","10oz"],["32oz Crowler","32oz<br>Crowler"],["64oz Fill","64oz<br>Fill"]];
+
+function call(fn, arg){
+  if (GAS) return new Promise((ok,no)=>google.script.run.withSuccessHandler(ok).withFailureHandler(no)[fn](arg));
+  const url = API + (fn==="getBoardData" ? "?action=data" : "?action=ad&id="+encodeURIComponent(arg));
+  return fetch(url).then(r=>r.json());
+}
+
+let DATA=null, CFG={perPage:10,pageSeconds:10,adSeconds:15,adsPerLoop:1,refreshMinutes:2};
+const adCache={};   // id -> {updated, src}
+
+async function refresh(){
+  try{
+    const d = await call("getBoardData");
+    if (d && d.beers && d.beers.length) { DATA=d; CFG=Object.assign(CFG,d.settings||{}); }
+    for (const a of (d.ads||[])) {
+      const c=adCache[a.id];
+      if (!c || c.updated!==a.updated) {
+        const img = await call("getAd", a.id);
+        if (img && img.b64) adCache[a.id]={updated:a.updated, src:"data:"+img.mime+";base64,"+img.b64};
+      }
+    }
+  }catch(e){ console.log("refresh failed", e); }
+}
+
+function waves(c){
+  let p="M0 30"; for(let x=30;x<=1920;x+=60) p+=` Q ${x} ${((x/30)%2)?0:60} ${x+30} 30`;
+  p = "M0 30 " + Array.from({length:32},(_,i)=>`Q ${i*60+30} ${i%2?60:0} ${i*60+60} 30`).join(" ");
+  return `<svg viewBox="0 0 1920 60" width="1920" height="60" preserveAspectRatio="none"><g fill="none" stroke="${c}" stroke-width="7" opacity=".9">
+    <path d="${p}"/><path d="${p}" transform="translate(0,16)"/><path d="${p}" transform="translate(0,-16)"/></g></svg>`;
+}
+const esc = t => String(t==null?"":t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const money = n => `<span class="d">$</span>${Number(n)%1?Number(n).toFixed(2):Number(n)}`;
+
+function rowHTML(b){
+  const byName={}; (b.containers||[]).forEach(c=>byName[c.name]=c.price);
+  const std = (b.containers||[]).length && (b.containers||[]).every(c=>STD_COLS.some(s=>s[0]===c.name));
+  const right = std ? STD_COLS.map(s=>`<div class="pr">${byName[s[0]]!=null?money(byName[s[0]]):""}</div>`).join("")
+                    : `<div class="span4">${(b.containers||[]).map(c=>`${esc(c.name.replace(" Draft",""))} <b>$${Number(c.price)%1?Number(c.price).toFixed(2):Number(c.price)}</b>`).join(" &nbsp;·&nbsp; ")}</div>`;
+  const style = esc((b.style||"").replace(/ - Traditional$/,""));
+  return `<div class="row"><div><div class="nm" style="${b.name.length>24?'font-size:34px':''}"><span class="n">${esc(b.tap)}</span>${esc(b.name)}${b.isNew?'<span class="new">NEW</span>':''}</div>
+          <div class="st">${style}${b.abv!=null?` &nbsp;•&nbsp; ${Number(b.abv).toFixed(1)}% ABV`:""}</div></div>${right}</div>`;
+}
+function tapPage(list, idx, total){
+  const half = Math.ceil(CFG.perPage/2);
+  const col = items => `<div class="col"><div class="ph"><span style="text-align:left">On Tap</span>${STD_COLS.map(c=>`<span>${c[1]}</span>`).join("")}</div>
+      ${items.map(rowHTML).join("")}${Array(Math.max(0,half-items.length)).fill('<div class="row"></div>').join("")}</div>`;
+  return `<div class="screen tap">
+    <div class="badge l">RIVER<br>REMEDY</div><div class="badge r">ROME<br>GA</div>
+    <div class="head"><h1>BREWED IN HOUSE!</h1><div class="sub">Pours · Crowlers · Growler Fills</div></div>
+    <div class="cols">${col(list.slice(0,half))}${col(list.slice(half))}</div>
+    <div class="foot"><div class="waves">${waves('#8fcdea')}</div>
+      <div class="fbar"><span>riverremedybrewing.com</span><span class="dots">${Array.from({length:total},(_,i)=>`<i class="${i===idx?'on':''}"></i>`).join("")}</span><span>#BeTheRemedy</span></div></div>
+  </div>`;
+}
+
+const stage=document.getElementById("stage");
+let playlist=[], pos=0, adCursor=0, timer=null;
+function build(){
+  playlist=[];
+  if (!DATA) { playlist=[{html:'<div class="screen tap"><div id="msg">Loading tap list…</div></div>', secs:5}]; return; }
+  const beers=DATA.beers, pages=[];
+  for(let i=0;i<beers.length;i+=CFG.perPage) pages.push(beers.slice(i,i+CFG.perPage));
+  pages.forEach((p,i)=>playlist.push({html:tapPage(p,i,pages.length), secs:CFG.pageSeconds}));
+  const ads=(DATA.ads||[]).filter(a=>adCache[a.id]);
+  for(let k=0;k<CFG.adsPerLoop && ads.length;k++){
+    const a=ads[adCursor%ads.length]; adCursor++;
+    playlist.push({html:`<div class="screen ad img"><img src="${adCache[a.id].src}" alt=""></div>`, secs:a.secs||CFG.adSeconds});
+  }
+}
+function show(){
+  const cur=stage.querySelector(".screen.on");
+  const w=document.createElement("div"); w.innerHTML=playlist[pos].html; const el=w.firstElementChild;
+  stage.appendChild(el); requestAnimationFrame(()=>requestAnimationFrame(()=>el.classList.add("on")));
+  if(cur){ cur.classList.remove("on"); setTimeout(()=>cur.remove(),900); }
+  clearTimeout(timer); timer=setTimeout(advance, playlist[pos].secs*1000);
+}
+function advance(){ pos++; if(pos>=playlist.length){ build(); pos=0; } show(); }
+function fit(){ const s=Math.min(innerWidth/1920, innerHeight/1080); stage.style.transform=`translate(-50%,-50%) scale(${s})`; }
+addEventListener("resize",fit); fit();
+
+(async function start(){
+  build(); show();
+  await refresh(); build(); pos=0; show();
+  setInterval(refresh, CFG.refreshMinutes*60*1000);
+  setTimeout(()=>location.reload(), 6*60*60*1000);   // fresh start every 6 hours
+})();
+</script>
+</body>
+</html>
