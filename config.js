@@ -1,3 +1,2 @@
 // Apps Script web app URL for the RRBC Tap Board data service.
-// Replace with the /exec link after deploying the script.
-window.TAPBOARD_API = "";
+window.TAPBOARD_API = "https://script.google.com/macros/s/AKfycbzw7n-HyDJWhDDYDqmQ_uE4emDczkUrNeVXDsry7N9wEgWCKDWEWtKTRUFBJudgdwBjcg/exec";
